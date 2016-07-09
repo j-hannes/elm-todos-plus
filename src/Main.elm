@@ -84,7 +84,7 @@ update action state =
 view : State -> Html Action
 view state =
     div [ class "container" ]
-        [ h1 [] [ text "Todos" ]
+        [ h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
         , App.map Input (TodoInput.view state.todoInput)
         ]
 
