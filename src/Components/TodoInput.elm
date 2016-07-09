@@ -1,11 +1,4 @@
-module Components.TodoInput
-    exposing
-        ( Model
-        , model
-        , Update
-        , update
-        , view
-        )
+module Components.TodoInput exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -15,43 +8,56 @@ import Html.Events exposing (..)
 -- MODEL
 
 
-type alias Model =
-    { todo : String
+type alias State =
+    { input : String
     }
 
 
-model : Model
-model =
-    Model ""
+initialState : State
+initialState =
+    { input = ""
+    }
 
 
 
 -- UPDATE
 
 
-type Update
-    = Todo String
+type Action
+    = NoOp
+    | Input String
+    | Add
 
 
-update : Update -> Model -> Model
-update update model =
-    case update of
-        Todo todo ->
-            { model | todo = todo }
+update : Action -> State -> State
+update action state =
+    case action of
+        NoOp ->
+            state
+
+        Input input ->
+            { state | input = input }
+
+        Add ->
+            initialState
 
 
 
 -- VIEW
 
 
-view : Html Update
-view =
-    div [ class "form-group" ]
+view : State -> Html Action
+view state =
+    Html.form
+        [ class "form-group"
+        , onSubmit Add
+        ]
         [ input
             [ class "form-control"
             , type' "text"
             , placeholder "Add new todo"
-            , onInput Todo
+            , onInput Input
+            , value state.input
             ]
             []
         ]
