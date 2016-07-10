@@ -16,7 +16,7 @@ main : Program Never
 main =
     App.beginnerProgram
         { model = initialState
-        , update = updateWithLog
+        , update = update
         , view = view
         }
 
@@ -25,28 +25,15 @@ main =
 -- MODEL
 
 
-type alias Todo =
-    { text : String, completed : Bool }
-
-
-newTodo : String -> Todo
-newTodo text =
-    { text = text
-    , completed = False
-    }
-
-
 type alias State =
-    { todos : List Todo
-    , todoInput : TodoInput.State
+    { todoInput : TodoInput.State
     , todoList : TodoList.State
     }
 
 
 initialState : State
 initialState =
-    { todos = []
-    , todoInput = TodoInput.initialState
+    { todoInput = TodoInput.initialState
     , todoList = TodoList.initialState
     }
 
@@ -72,7 +59,6 @@ update action state =
             { state
                 | todoInput = TodoInput.update (Add input) state.todoInput
                 , todoList = TodoList.update (Add input) state.todoList
-                , todos = state.todos ++ [ newTodo state.todoInput.input ]
             }
 
 

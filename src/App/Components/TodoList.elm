@@ -2,7 +2,6 @@ module App.Components.TodoList exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import App.Actions exposing (..)
 
 
@@ -49,7 +48,13 @@ update action state =
 -- VIEW
 
 
+renderTodo : Todo -> Html Action
+renderTodo todo =
+    li [ class "list-group-item" ]
+        [ text <| .text todo ]
+
+
 view : State -> Html Action
 view state =
-    div []
-        [ text "todo-list" ]
+    ul [ class "list-group" ]
+        (List.map renderTodo state.todos)
