@@ -1,4 +1,4 @@
-module Main exposing (..)
+module App.Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,7 +8,7 @@ import Debug exposing (log)
 
 -- component import
 
-import Components.TodoInput as TodoInput
+import App.Components.TodoInput as TodoInput
 
 
 -- APP
