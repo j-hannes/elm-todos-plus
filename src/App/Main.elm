@@ -6,6 +6,7 @@ import Html.App as App
 import Debug exposing (log)
 import App.Actions exposing (..)
 import App.Components.TodoInput as TodoInput
+import App.Components.TodoList as TodoList
 
 
 -- APP
@@ -38,6 +39,7 @@ newTodo text =
 type alias State =
     { todos : List Todo
     , todoInput : TodoInput.State
+    , todoList : TodoList.State
     }
 
 
@@ -45,6 +47,7 @@ initialState : State
 initialState =
     { todos = []
     , todoInput = TodoInput.initialState
+    , todoList = TodoList.initialState
     }
 
 
@@ -81,6 +84,7 @@ view state =
     div [ class "container" ]
         [ h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
         , TodoInput.view state.todoInput
+        , TodoList.view state.todoList
         ]
 
 
