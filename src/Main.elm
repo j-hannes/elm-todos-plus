@@ -9,10 +9,8 @@ import Debug exposing (log)
 -- component import
 
 import Components.TodoInput as TodoInput
-import Components.TodoInput exposing (Action(..))
 
 
--- import Components.TodoInput exposing (Add)
 -- APP
 
 
@@ -63,10 +61,10 @@ update action state =
     case (log "action" action) of
         Input todoInputAction ->
             case todoInputAction of
-                Add ->
+                TodoInput.Add ->
                     log "state"
                         { state
-                            | todoInput = TodoInput.update Add state.todoInput
+                            | todoInput = TodoInput.update TodoInput.Add state.todoInput
                             , todos = state.todos ++ [ newTodo state.todoInput.input ]
                         }
 
