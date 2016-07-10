@@ -59,20 +59,25 @@ type Action
 update : Action -> State -> State
 update action state =
     case (log "action" action) of
-        Input todoInputAction ->
-            case todoInputAction of
-                TodoInput.Add ->
-                    log "state"
-                        { state
-                            | todoInput = TodoInput.update TodoInput.Add state.todoInput
-                            , todos = state.todos ++ [ newTodo state.todoInput.input ]
-                        }
+        Input action ->
+            updateTodoInput action state
 
-                input ->
-                    log "state"
-                        { state
-                            | todoInput = TodoInput.update input state.todoInput
-                        }
+
+updateTodoInput : TodoInput.Action -> State -> State
+updateTodoInput action state =
+    case action of
+        TodoInput.Add ->
+            log "state"
+                { state
+                    | todoInput = TodoInput.update TodoInput.Add state.todoInput
+                    , todos = state.todos ++ [ newTodo state.todoInput.input ]
+                }
+
+        input ->
+            log "state"
+                { state
+                    | todoInput = TodoInput.update input state.todoInput
+                }
 
 
 
