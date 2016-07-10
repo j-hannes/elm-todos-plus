@@ -9,14 +9,25 @@ import App.Actions exposing (..)
 -- MODEL
 
 
+type alias Todo =
+    { text : String, completed : Bool }
+
+
+newTodo : String -> Todo
+newTodo text =
+    { text = text
+    , completed = False
+    }
+
+
 type alias State =
-    { input : String
+    { todos : List Todo
     }
 
 
 initialState : State
 initialState =
-    { input = ""
+    { todos = []
     }
 
 
@@ -30,8 +41,8 @@ update action state =
         Input _ ->
             state
 
-        Add ->
-            state
+        Add todoText ->
+            { state | todos = state.todos ++ [ newTodo todoText ] }
 
 
 

@@ -68,9 +68,10 @@ update action state =
                 | todoInput = TodoInput.update (Input input) state.todoInput
             }
 
-        Add ->
+        Add input ->
             { state
-                | todoInput = TodoInput.update Add state.todoInput
+                | todoInput = TodoInput.update (Add input) state.todoInput
+                , todoList = TodoList.update (Add input) state.todoList
                 , todos = state.todos ++ [ newTodo state.todoInput.input ]
             }
 
