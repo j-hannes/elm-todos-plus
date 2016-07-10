@@ -4,10 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App as App
 import Debug exposing (log)
-
-
--- component import
-
+import App.Actions exposing (..)
 import App.Components.TodoInput as TodoInput
 
 
@@ -16,7 +13,11 @@ import App.Components.TodoInput as TodoInput
 
 main : Program Never
 main =
-    App.beginnerProgram { model = initialState, update = update, view = view }
+    App.beginnerProgram
+        { model = initialState
+        , update = updateWithLog
+        , view = view
+        }
 
 
 
@@ -42,42 +43,33 @@ type alias State =
 
 initialState : State
 initialState =
-    log "initialState"
-        { todos = []
-        , todoInput = TodoInput.initialState
-        }
+    { todos = []
+    , todoInput = TodoInput.initialState
+    }
 
 
 
 -- UPDATE
 
 
-type Action
-    = Input TodoInput.Action
+updateWithLog : Action -> State -> State
+updateWithLog action state =
+    update (log "Main.action" action) (log "Main.state" state)
 
 
 update : Action -> State -> State
 update action state =
-    case (log "action" action) of
-        Input action ->
-            updateTodoInput action state
-
-
-updateTodoInput : TodoInput.Action -> State -> State
-updateTodoInput action state =
     case action of
-        TodoInput.Add ->
-            log "state"
-                { state
-                    | todoInput = TodoInput.update TodoInput.Add state.todoInput
-                    , todos = state.todos ++ [ newTodo state.todoInput.input ]
-                }
+        Input input ->
+            { state
+                | todoInput = TodoInput.update (Input input) state.todoInput
+            }
 
-        input ->
-            log "state"
-                { state
-                    | todoInput = TodoInput.update input state.todoInput
-                }
+        Add ->
+            { state
+                | todoInput = TodoInput.update Add state.todoInput
+                , todos = state.todos ++ [ newTodo state.todoInput.input ]
+            }
 
 
 
@@ -88,7 +80,7 @@ view : State -> Html Action
 view state =
     div [ class "container" ]
         [ h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
-        , App.map Input (TodoInput.view state.todoInput)
+        , TodoInput.view state.todoInput
         ]
 
 

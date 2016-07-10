@@ -3,6 +3,7 @@ module App.Components.TodoInput exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import App.Actions exposing (..)
 
 
 -- MODEL
@@ -21,11 +22,6 @@ initialState =
 
 
 -- UPDATE
-
-
-type Action
-    = Input String
-    | Add
 
 
 update : Action -> State -> State
