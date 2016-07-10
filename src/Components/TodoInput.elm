@@ -24,17 +24,13 @@ initialState =
 
 
 type Action
-    = NoOp
-    | Input String
+    = Input String
     | Add
 
 
 update : Action -> State -> State
 update action state =
     case action of
-        NoOp ->
-            state
-
         Input input ->
             { state | input = input }
 
