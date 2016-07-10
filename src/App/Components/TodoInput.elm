@@ -30,7 +30,7 @@ update action state =
         Input input ->
             { state | input = input }
 
-        Add ->
+        Add _ ->
             initialState
 
 
@@ -42,7 +42,7 @@ view : State -> Html Action
 view state =
     Html.form
         [ class "form-group"
-        , onSubmit Add
+        , onSubmit (Add state.input)
         ]
         [ input
             [ class "form-control"
