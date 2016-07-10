@@ -1,8 +1,9 @@
-module Components.TodoInput exposing (..)
+module App.Components.TodoInput exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import App.Actions exposing (..)
 
 
 -- MODEL
@@ -23,18 +24,9 @@ initialState =
 -- UPDATE
 
 
-type Action
-    = NoOp
-    | Input String
-    | Add
-
-
 update : Action -> State -> State
 update action state =
     case action of
-        NoOp ->
-            state
-
         Input input ->
             { state | input = input }
 
