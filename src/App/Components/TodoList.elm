@@ -37,11 +37,11 @@ initialState =
 update : Action -> State -> State
 update action state =
     case action of
-        Input _ ->
-            state
+        Add description ->
+            { state | todos = state.todos ++ [ newTodo description ] }
 
-        Add todoText ->
-            { state | todos = state.todos ++ [ newTodo todoText ] }
+        _ ->
+            state
 
 
 

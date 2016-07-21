@@ -50,15 +50,15 @@ updateWithLog action state =
 update : Action -> State -> State
 update action state =
     case action of
-        Input input ->
+        Input description ->
             { state
-                | todoInput = TodoInput.update (Input input) state.todoInput
+                | todoInput = TodoInput.update (Input description) state.todoInput
             }
 
-        Add input ->
+        Add description ->
             { state
-                | todoInput = TodoInput.update (Add input) state.todoInput
-                , todoList = TodoList.update (Add input) state.todoList
+                | todoInput = TodoInput.update (Add description) state.todoInput
+                , todoList = TodoList.update (Add description) state.todoList
             }
 
 
