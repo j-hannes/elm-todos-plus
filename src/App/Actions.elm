@@ -1,4 +1,4 @@
-module App.Actions exposing (..)
+module Actions exposing (..)
 
 
 type Action

@@ -1,9 +1,9 @@
-module App.Components.TodoInput exposing (..)
+module Components.TodoInput exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import App.Actions exposing (..)
+import Actions exposing (..)
 
 
 -- MODEL

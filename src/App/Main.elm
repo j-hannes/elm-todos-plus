@@ -1,12 +1,12 @@
-module App.Main exposing (..)
+module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App as App
 import Debug exposing (log)
-import App.Actions exposing (..)
-import App.Components.TodoInput as TodoInput
-import App.Components.TodoList as TodoList
+import Actions exposing (..)
+import Components.TodoInput as TodoInput
+import Components.TodoList as TodoList
 
 
 -- APP

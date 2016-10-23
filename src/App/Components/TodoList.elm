@@ -1,8 +1,8 @@
-module App.Components.TodoList exposing (..)
+module Components.TodoList exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import App.Actions exposing (..)
+import Actions exposing (..)
 
 
 -- MODEL
