@@ -77,6 +77,10 @@ if ( TARGET_ENV === 'development' ) {
             'postcss-loader',
             'sass-loader'
           ]
+        },
+        {
+          test: /\.ico$/,
+          loader: 'file-loader?name=[name].[ext]'
         }
       ]
     }
