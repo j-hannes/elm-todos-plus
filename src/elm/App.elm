@@ -5,8 +5,8 @@ import Html.App exposing (beginnerProgram)
 import Html exposing (Html, div, h1, text)
 import Html.Attributes exposing (class, style)
 import Messages exposing (..)
-import TodoInput
-import TodoList
+import Components.TodoInput as TodoInput
+import Components.TodoList as TodoList
 
 
 main : Program Never

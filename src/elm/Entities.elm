@@ -2,7 +2,9 @@ module Entities exposing (..)
 
 
 type alias Todo =
-    { text : String, completed : Bool }
+    { text : String
+    , completed : Bool
+    }
 
 
 newTodo : String -> Todo

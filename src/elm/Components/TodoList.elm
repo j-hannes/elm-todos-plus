@@ -1,4 +1,4 @@
-module TodoList
+module Components.TodoList
     exposing
         ( State
         , init
@@ -53,4 +53,4 @@ render state =
 renderTodo : Todo -> Html Message
 renderTodo todo =
     li [ class "list-group-item" ]
-        [ text <| .text todo ]
+        [ text todo.text ]

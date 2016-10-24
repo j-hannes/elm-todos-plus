@@ -1,4 +1,4 @@
-module TodoInput
+module Components.TodoInput
     exposing
         ( State
         , init
