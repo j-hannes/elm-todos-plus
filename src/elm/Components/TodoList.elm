@@ -6,8 +6,9 @@ module Components.TodoList
         , render
         )
 
-import Html exposing (Html, li, text, ul)
-import Html.Attributes exposing (class)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Entities exposing (Todo, newTodo)
 import Messages exposing (..)
 
@@ -34,7 +35,32 @@ update : Message -> State -> State
 update message state =
     case message of
         AddTodo description ->
-            { state | todos = state.todos ++ [ newTodo description ] }
+            let
+                nextTodos =
+                    List.filter (\t -> t.text /= description) state.todos
+            in
+                { state | todos = newTodo description :: nextTodos }
+
+        DeleteTodo description ->
+            let
+                filteredTodos =
+                    List.filter (\t -> t.text /= description) state.todos
+            in
+                { state | todos = filteredTodos }
+
+        ToggleTodo description ->
+            let
+                nextTodos =
+                    List.map
+                        (\t ->
+                            if t.text == description then
+                                { t | completed = not t.completed }
+                            else
+                                t
+                        )
+                        state.todos
+            in
+                { state | todos = nextTodos }
 
         _ ->
             state
@@ -53,4 +79,19 @@ render state =
 renderTodo : Todo -> Html Message
 renderTodo todo =
     li [ class "list-group-item" ]
-        [ text todo.text ]
+        [ span [ style (todoStyle todo), onClick (ToggleTodo todo.text) ]
+            [ text todo.text ]
+        , button [ class "close", onClick (DeleteTodo todo.text) ]
+            [ span [] [ text "x" ] ]
+        ]
+
+
+todoStyle : Todo -> List ( String, String )
+todoStyle todo =
+    [ ( "cursor", "pointer" ) ]
+        ++ if todo.completed then
+            [ ( "text-decoration", "line-through" )
+            , ( "color", "#ccc" )
+            ]
+           else
+            []
