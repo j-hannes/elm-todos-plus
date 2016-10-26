@@ -39,6 +39,9 @@ update message state =
         AddTodo _ ->
             init
 
+        _ ->
+            state
+
 
 
 -- VIEW

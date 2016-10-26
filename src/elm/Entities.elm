@@ -12,3 +12,9 @@ newTodo text =
     { text = text
     , completed = False
     }
+
+
+type FilterState
+    = All
+    | Active
+    | Done

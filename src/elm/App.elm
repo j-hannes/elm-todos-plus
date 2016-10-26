@@ -2,18 +2,19 @@ module App exposing (..)
 
 import Debug exposing (log)
 import Html.App exposing (beginnerProgram)
-import Html exposing (Html, div, h1, text)
+import Html exposing (Html, button, div, h1, text)
 import Html.Attributes exposing (class, style)
 import Messages exposing (..)
 import Components.TodoInput as TodoInput
 import Components.TodoList as TodoList
+import Components.TodoFilter as TodoFilter
 
 
 main : Program Never
 main =
     beginnerProgram
         { model = init
-        , update = update
+        , update = updateWithLog
         , view = render
         }
 
@@ -25,6 +26,7 @@ main =
 type alias State =
     { todoInput : TodoInput.State
     , todoList : TodoList.State
+    , todoFilter : TodoFilter.State
     }
 
 
@@ -32,6 +34,7 @@ init : State
 init =
     { todoInput = TodoInput.init
     , todoList = TodoList.init
+    , todoFilter = TodoFilter.init
     }
 
 
@@ -49,6 +52,7 @@ update action state =
     { state
         | todoInput = TodoInput.update action state.todoInput
         , todoList = TodoList.update action state.todoList
+        , todoFilter = TodoFilter.update action state.todoFilter
     }
 
 
@@ -59,7 +63,8 @@ update action state =
 render : State -> Html Message
 render state =
     div [ class "container" ]
-        [ h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
+        [ TodoFilter.render state.todoFilter
+        , h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
         , TodoInput.render state.todoInput
         , TodoList.render state.todoList
         ]
