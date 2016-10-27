@@ -47,20 +47,24 @@ update message state =
 
 render : State -> Html Message
 render state =
-    div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
-        [ renderButton "all" (state.filterState == All) All
-        , renderButton "active" (state.filterState == Active) Active
-        , renderButton "done" (state.filterState == Done) Done
-        ]
+    let
+        buttons =
+            [ ( "all", All )
+            , ( "active", Active )
+            , ( "done", Done )
+            ]
+    in
+        div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
+            (List.map (renderButton state) buttons)
 
 
-renderButton : String -> Bool -> FilterState -> Html Message
-renderButton buttonText isActive newFilter =
+renderButton : State -> ( String, FilterState ) -> Html Message
+renderButton state ( buttonText, filterState ) =
     button
         [ classList
-            [ ( "active", isActive )
+            [ ( "active", state.filterState == filterState )
             , ( "btn btn-primary", True )
             ]
-        , onClick (ChangeFilter newFilter)
+        , onClick (ChangeFilter filterState)
         ]
         [ text buttonText ]

@@ -43,16 +43,23 @@ init =
 
 
 updateWithLog : Message -> State -> State
-updateWithLog action state =
-    update (log "Main.action" action) (log "Main.state" state)
+updateWithLog message state =
+    let
+        m =
+            log "Message" message
+
+        s =
+            log "State" state
+    in
+        update m s
 
 
 update : Message -> State -> State
-update action state =
+update message state =
     { state
-        | todoInput = TodoInput.update action state.todoInput
-        , todoList = TodoList.update action state.todoList
-        , todoFilter = TodoFilter.update action state.todoFilter
+        | todoInput = TodoInput.update message state.todoInput
+        , todoList = TodoList.update message state.todoList
+        , todoFilter = TodoFilter.update message state.todoFilter
     }
 
 
@@ -68,13 +75,3 @@ render state =
         , TodoInput.render state.todoInput
         , TodoList.render state.todoList
         ]
-
-
-styles : { wrapper : List ( String, String ) }
-styles =
-    { wrapper =
-        [ ( "padding-top", "10px" )
-        , ( "padding-bottom", "20px" )
-        , ( "text-align", "center" )
-        ]
-    }

@@ -9,7 +9,7 @@ module Components.TodoList
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Entities exposing (Todo, newTodo)
+import Entities exposing (..)
 import Messages exposing (..)
 
 
@@ -18,12 +18,14 @@ import Messages exposing (..)
 
 type alias State =
     { todos : List Todo
+    , visibleTodos : List Todo
     }
 
 
 init : State
 init =
     { todos = []
+    , visibleTodos = []
     }
 
 
@@ -31,22 +33,44 @@ init =
 -- UPDATE
 
 
+filterTodos : FilterState -> List Todo -> List Todo
+filterTodos filterState todos =
+    case filterState of
+        All ->
+            todos
+
+        Active ->
+            List.filter (\t -> t.completed == False) todos
+
+        Done ->
+            List.filter (\t -> t.completed == True) todos
+
+
 update : Message -> State -> State
 update message state =
     case message of
         AddTodo description ->
             let
-                nextTodos =
+                filteredTodos =
                     List.filter (\t -> t.text /= description) state.todos
+
+                nextTodos =
+                    newTodo description :: nextTodos
             in
-                { state | todos = newTodo description :: nextTodos }
+                { state
+                    | todos = nextTodos
+                    , visibleTodos = nextTodos
+                }
 
         DeleteTodo description ->
             let
                 filteredTodos =
                     List.filter (\t -> t.text /= description) state.todos
             in
-                { state | todos = filteredTodos }
+                { state
+                    | todos = filteredTodos
+                    , visibleTodos = filteredTodos
+                }
 
         ToggleTodo description ->
             let
@@ -60,7 +84,13 @@ update message state =
                         )
                         state.todos
             in
-                { state | todos = nextTodos }
+                { state
+                    | todos = nextTodos
+                    , visibleTodos = nextTodos
+                }
+
+        ChangeFilter filterState ->
+            { state | visibleTodos = filterTodos filterState state.todos }
 
         _ ->
             state
@@ -73,7 +103,7 @@ update message state =
 render : State -> Html Message
 render state =
     ul [ class "list-group" ]
-        (List.map renderTodo state.todos)
+        (List.map renderTodo state.visibleTodos)
 
 
 renderTodo : Todo -> Html Message
