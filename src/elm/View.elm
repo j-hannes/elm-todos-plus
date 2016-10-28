@@ -1,5 +1,6 @@
 module View exposing (render)
 
+import List exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -44,7 +45,7 @@ renderVisibility visibility =
             ]
     in
         div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
-            (List.map (renderButton visibility) buttons)
+            (map (renderButton visibility) buttons)
 
 
 renderButton : Visibility -> ( String, Visibility ) -> Html Action
@@ -59,6 +60,12 @@ renderButton currentVisibility ( buttonText, visibility ) =
         [ text buttonText ]
 
 
+
+-- filterTodos All    = identity
+-- filterTodos Active = filter ((== False) . completed)
+-- filterTodos Done   = filter ((== True) . completed)
+
+
 filterTodos : Visibility -> List Todo -> List Todo
 filterTodos visibility todos =
     case visibility of
@@ -66,16 +73,16 @@ filterTodos visibility todos =
             todos
 
         Active ->
-            List.filter (\t -> t.completed == False) todos
+            filter (\t -> t.completed == False) todos
 
         Done ->
-            List.filter (\t -> t.completed == True) todos
+            filter (\t -> t.completed == True) todos
 
 
 renderTodos : List Todo -> Visibility -> Html Action
 renderTodos todos visibility =
     ul [ class "list-group" ]
-        (List.map renderTodo (filterTodos visibility todos))
+        (map renderTodo (filterTodos visibility todos))
 
 
 renderTodo : Todo -> Html Action

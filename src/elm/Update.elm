@@ -1,5 +1,6 @@
 module Update exposing (..)
 
+import List exposing (..)
 import Debug exposing (log)
 import Actions exposing (..)
 import State exposing (..)
@@ -23,40 +24,45 @@ update message state =
         UpdateInput input ->
             { state | input = input }
 
+        AddTodo description ->
+            { state
+                | input = ""
+                , todos = addTodo description state.todos
+            }
+
+        DeleteTodo description ->
+            { state | todos = deleteTodo description state.todos }
+
+        ToggleTodo description ->
+            { state | todos = toggleTodo description state.todos }
+
         ChangeVisibility visibility ->
             { state | visibility = visibility }
 
-        AddTodo description ->
-            let
-                filteredTodos =
-                    List.filter (\t -> t.text /= description) state.todos
 
-                nextTodos =
-                    newTodo description :: filteredTodos
-            in
-                { state
-                    | input = ""
-                    , todos = nextTodos
-                }
+addTodo : String -> List Todo -> List Todo
+addTodo description todos =
+    newTodo description :: deleteTodo description todos
 
-        DeleteTodo description ->
-            let
-                filteredTodos =
-                    List.filter (\t -> t.text /= description) state.todos
-            in
-                { state
-                    | todos = filteredTodos
-                }
 
-        ToggleTodo description ->
-            let
-                nextTodos =
-                    List.map toggleTodo state.todos
+deleteTodo : String -> List Todo -> List Todo
+deleteTodo description todos =
+    filter (\t -> t.text /= description) todos
 
-                toggleTodo t =
-                    if t.text == description then
-                        { t | completed = not t.completed }
-                    else
-                        t
-            in
-                { state | todos = nextTodos }
+
+toggleTodo : String -> List Todo -> List Todo
+toggleTodo description todos =
+    map (toggleByText description) todos
+
+
+toggleByText : String -> Todo -> Todo
+toggleByText description todo =
+    if todo.text == description then
+        toggle todo
+    else
+        todo
+
+
+toggle : Todo -> Todo
+toggle todo =
+    { todo | completed = not todo.completed }
