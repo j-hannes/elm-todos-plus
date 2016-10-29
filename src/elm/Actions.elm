@@ -8,4 +8,5 @@ type Action
     | AddTodo String
     | DeleteTodo String
     | ToggleTodo String
+    | UpdateTodo String String
     | ChangeVisibility Visibility

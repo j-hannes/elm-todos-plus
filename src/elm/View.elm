@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Actions exposing (..)
 import State exposing (..)
+import Json.Decode as Json
 
 
 app : State -> Html Action
@@ -98,42 +99,63 @@ todoList todos visibility =
         todoList =
             todos
                 |> filterByVisibility visibility
-                |> map todoListItem
+                |> map todoItem
     in
         ul [ class "list-group" ] todoList
 
 
-todoListItem : Todo -> Html Action
-todoListItem todo =
-    li [ class "list-group-item" ]
-        [ input
-            [ type' "checkbox"
-            , onClick <| ToggleTodo todo.text
-            , style [ ( "margin-right", "15px" ) ]
-            ]
-            []
-        , span
-            [ style <| todoStyle todo
-            ]
-            [ text todo.text ]
-        , button
-            [ class "close"
-            , onClick <| DeleteTodo todo.text
-            ]
-            [ span [] [ text "x" ] ]
-        ]
-
-
-todoStyle : Todo -> List ( String, String )
-todoStyle todo =
+todoItem : Todo -> Html Action
+todoItem todo =
     let
-        completedStyle =
+        todoVariant =
+            if todo.completed then
+                completedTodoItem
+            else
+                activeTodoItem
+    in
+        li [ class "list-group-item" ]
+            [ input
+                [ type' "checkbox"
+                , onClick <| ToggleTodo todo.text
+                , style [ ( "margin-right", "15px" ) ]
+                , checked todo.completed
+                ]
+                []
+            , todoVariant todo.text
+            , button
+                [ class "close"
+                , onClick <| DeleteTodo todo.text
+                ]
+                [ span [] [ text "x" ] ]
+            ]
+
+
+completedTodoItem : String -> Html Action
+completedTodoItem todoText =
+    span
+        [ style
             [ ( "text-decoration", "line-through" )
             , ( "color", "#ccc" )
+            , ( "width", "calc(100% - 50px)" )
+            , ( "display", "inline-flex" )
+            , ( "white-space", "nowrap" )
+            , ( "overflow", "hidden" )
+            , ( "padding", "1px" )
             ]
-    in
-        [ ( "cursor", "pointer" ) ]
-            ++ if todo.completed then
-                completedStyle
-               else
-                []
+        ]
+        [ text todoText ]
+
+
+activeTodoItem : String -> Html Action
+activeTodoItem todoText =
+    span []
+        [ input
+            [ value todoText
+            , style
+                [ ( "border", "none" )
+                , ( "width", "calc(100% - 50px)" )
+                ]
+            , on "blur" <| Json.map (UpdateTodo todoText) targetValue
+            ]
+            []
+        ]

@@ -8,10 +8,18 @@ type alias State =
     }
 
 
+testData : List Todo
+testData =
+    [ Todo "buy some milk" False
+    , Todo "walk the dog" True
+    , Todo "buy more beer" False
+    ]
+
+
 init : State
 init =
     { input = ""
-    , todos = []
+    , todos = testData
     , visibility = All
     }
 

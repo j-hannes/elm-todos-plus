@@ -34,7 +34,10 @@ update message state =
             { state | todos = deleteTodo description state.todos }
 
         ToggleTodo description ->
-            { state | todos = toggleTodo description state.todos }
+            { state | todos = map (toggleTodo description) state.todos }
+
+        UpdateTodo description newDescription ->
+            { state | todos = map (updateTodo description newDescription) state.todos }
 
         ChangeVisibility visibility ->
             { state | visibility = visibility }
@@ -50,19 +53,17 @@ deleteTodo description todos =
     filter (\t -> t.text /= description) todos
 
 
-toggleTodo : String -> List Todo -> List Todo
-toggleTodo description todos =
-    map (toggleByText description) todos
-
-
-toggleByText : String -> Todo -> Todo
-toggleByText description todo =
+toggleTodo : String -> Todo -> Todo
+toggleTodo description todo =
     if todo.text == description then
-        toggle todo
+        { todo | completed = not todo.completed }
     else
         todo
 
 
-toggle : Todo -> Todo
-toggle todo =
-    { todo | completed = not todo.completed }
+updateTodo : String -> String -> Todo -> Todo
+updateTodo description newDescription todo =
+    if (todo.text == description) then
+        { todo | text = newDescription }
+    else
+        todo
