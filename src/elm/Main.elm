@@ -10,6 +10,6 @@ main : Program Never
 main =
     beginnerProgram
         { model = [ init ]
-        , update = updateWithLog
+        , update = update
         , view = app
         }

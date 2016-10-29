@@ -7,16 +7,7 @@ import Actions exposing (..)
 import State exposing (..)
 
 
-updateWithLog : Action -> List State -> List State
-updateWithLog message states =
-    let
-        m =
-            log "Action" message
-
-        s =
-            log "State" states
-    in
-        update m s
+-- UPDATE STATE
 
 
 update : Action -> List State -> List State
@@ -52,6 +43,10 @@ update message states =
                 withDefault [ init ] <| tail states
 
 
+
+-- INDIVIDUAL UPDATES
+
+
 addTodo : String -> List Todo -> List Todo
 addTodo description todos =
     newTodo description :: deleteTodo description todos
@@ -76,3 +71,19 @@ updateTodo description newDescription todo =
         { todo | text = newDescription }
     else
         todo
+
+
+
+-- LOGGING
+
+
+updateWithLog : Action -> List State -> List State
+updateWithLog message states =
+    let
+        m =
+            log "Action" message
+
+        s =
+            log "State" states
+    in
+        update m s

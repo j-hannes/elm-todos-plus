@@ -10,6 +10,9 @@ import State exposing (..)
 import Json.Decode as Json
 
 
+-- APP
+
+
 app : List State -> Html Action
 app states =
     let
@@ -25,6 +28,10 @@ app states =
             ]
 
 
+
+-- UNDO
+
+
 undoButton : Int -> Html Action
 undoButton numStates =
     button
@@ -33,6 +40,10 @@ undoButton numStates =
         , disabled (numStates == 1)
         ]
         [ text "Undo" ]
+
+
+
+-- VISIBILITY
 
 
 visibilityFilter : Visibility -> Html Action
@@ -73,6 +84,10 @@ changeVisibilityButton currentVisibility ( buttonText, visibility ) =
         [ text buttonText ]
 
 
+
+-- INPUT
+
+
 todoInput : String -> Html Action
 todoInput inputText =
     Html.form
@@ -91,9 +106,7 @@ todoInput inputText =
 
 
 
--- filterByVisibility All    = identity
--- filterByVisibility Active = filter ((== False) . completed)
--- filterByVisibility Done   = filter ((== True) . completed)
+-- LIST
 
 
 filterByVisibility : Visibility -> List Todo -> List Todo
