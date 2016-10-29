@@ -2,7 +2,7 @@
 
 Todo app written in Elm to teach myself some Elm.
 
-![Screenshot](/screenshot.png?raw=true "Elm Todos Plus App")
+<img src="/screenshot.png?raw=true" alt="Screenshot" title="Elm Todos Plus App" width="475">
 
 ## Description
 
