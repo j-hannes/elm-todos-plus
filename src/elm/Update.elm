@@ -2,7 +2,6 @@ module Update exposing (..)
 
 import List exposing (..)
 import Debug exposing (log)
-import Maybe exposing (withDefault)
 import Actions exposing (..)
 import State exposing (..)
 
@@ -12,35 +11,41 @@ import State exposing (..)
 
 update : Action -> List State -> List State
 update message states =
-    let
-        state =
-            withDefault init <| head states
-    in
-        case message of
-            UpdateInput input ->
-                { state | input = input } :: states
+    case states of
+        [] ->
+            []
 
-            AddTodo description ->
-                { state
-                    | input = ""
-                    , todos = addTodo description state.todos
-                }
-                    :: states
+        state :: lastStates ->
+            case message of
+                UpdateInput input ->
+                    { state | input = input } :: lastStates
 
-            DeleteTodo description ->
-                { state | todos = deleteTodo description state.todos } :: states
+                AddTodo description ->
+                    { state
+                        | input = ""
+                        , todos = addTodo description state.todos
+                    }
+                        :: states
 
-            ToggleTodo description ->
-                { state | todos = map (toggleTodo description) state.todos } :: states
+                DeleteTodo description ->
+                    { state | todos = deleteTodo description state.todos } :: states
 
-            UpdateTodo description newDescription ->
-                { state | todos = map (updateTodo description newDescription) state.todos } :: states
+                ToggleTodo description ->
+                    { state | todos = map (toggleTodo description) state.todos } :: states
 
-            ChangeVisibility visibility ->
-                { state | visibility = visibility } :: states
+                UpdateTodo description newDescription ->
+                    { state | todos = map (updateTodo description newDescription) state.todos } :: states
 
-            Undo ->
-                withDefault [ init ] <| tail states
+                ChangeVisibility visibility ->
+                    { state | visibility = visibility } :: states
+
+                Undo ->
+                    case lastStates of
+                        [] ->
+                            []
+
+                        s :: ss ->
+                            { s | input = "" } :: ss
 
 
 
