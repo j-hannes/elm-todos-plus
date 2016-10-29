@@ -61,46 +61,61 @@ renderButton currentVisibility ( buttonText, visibility ) =
 
 
 
--- filterTodos All    = identity
--- filterTodos Active = filter ((== False) . completed)
--- filterTodos Done   = filter ((== True) . completed)
+-- filterByVisibility All    = identity
+-- filterByVisibility Active = filter ((== False) . completed)
+-- filterByVisibility Done   = filter ((== True) . completed)
 
 
-filterTodos : Visibility -> List Todo -> List Todo
-filterTodos visibility todos =
+filterByVisibility : Visibility -> List Todo -> List Todo
+filterByVisibility visibility =
     case visibility of
         All ->
-            todos
+            identity
 
         Active ->
-            filter (\t -> t.completed == False) todos
+            filter <| \t -> t.completed == False
 
         Done ->
-            filter (\t -> t.completed == True) todos
+            filter <| \t -> t.completed == True
 
 
 renderTodos : List Todo -> Visibility -> Html Action
 renderTodos todos visibility =
-    ul [ class "list-group" ]
-        (map renderTodo (filterTodos visibility todos))
+    let
+        todoList =
+            todos
+                |> filterByVisibility visibility
+                |> map renderTodo
+    in
+        ul [ class "list-group" ] todoList
 
 
 renderTodo : Todo -> Html Action
 renderTodo todo =
     li [ class "list-group-item" ]
-        [ span [ style (todoStyle todo), onClick (ToggleTodo todo.text) ]
+        [ span
+            [ style <| todoStyle todo
+            , onClick <| ToggleTodo todo.text
+            ]
             [ text todo.text ]
-        , button [ class "close", onClick (DeleteTodo todo.text) ]
+        , button
+            [ class "close"
+            , onClick <| DeleteTodo todo.text
+            ]
             [ span [] [ text "x" ] ]
         ]
 
 
 todoStyle : Todo -> List ( String, String )
 todoStyle todo =
-    [ ( "cursor", "pointer" ) ]
-        ++ if todo.completed then
+    let
+        completedStyle =
             [ ( "text-decoration", "line-through" )
             , ( "color", "#ccc" )
             ]
-           else
-            []
+    in
+        [ ( "cursor", "pointer" ) ]
+            ++ if todo.completed then
+                completedStyle
+               else
+                []
