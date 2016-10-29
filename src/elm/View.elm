@@ -177,14 +177,19 @@ completedTodoItem todoText =
 
 activeTodoItem : String -> Html Action
 activeTodoItem todoText =
-    span []
-        [ input
-            [ value todoText
-            , style
-                [ ( "border", "none" )
-                , ( "width", "calc(100% - 50px)" )
+    let
+        updateText =
+            Json.map (UpdateTodo todoText) targetValue
+    in
+        span []
+            [ input
+                [ value todoText
+                , style
+                    [ ( "border", "none" )
+                    , ( "width", "calc(100% - 50px)" )
+                    ]
+                , on "blur" updateText
+                , on "enter" updateText
                 ]
-            , on "blur" <| Json.map (UpdateTodo todoText) targetValue
+                []
             ]
-            []
-        ]
