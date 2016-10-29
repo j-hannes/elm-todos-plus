@@ -1,4 +1,4 @@
-module View exposing (render)
+module View exposing (app)
 
 import List exposing (..)
 import Html exposing (..)
@@ -8,18 +8,43 @@ import Actions exposing (..)
 import State exposing (..)
 
 
-render : State -> Html Action
-render { input, todos, visibility } =
+app : State -> Html Action
+app { input, todos, visibility } =
     div [ class "container" ]
-        [ renderVisibility visibility
+        [ visibilityFilter visibility
         , h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
-        , renderInput input
-        , renderTodos todos visibility
+        , todoInput input
+        , todoList todos visibility
         ]
 
 
-renderInput : String -> Html Action
-renderInput inputText =
+visibilityFilter : Visibility -> Html Action
+visibilityFilter visibility =
+    let
+        visibilityButtons =
+            [ ( "all", All )
+            , ( "active", Active )
+            , ( "done", Done )
+            ]
+    in
+        div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
+            (map (changeVisibilityButton visibility) visibilityButtons)
+
+
+changeVisibilityButton : Visibility -> ( String, Visibility ) -> Html Action
+changeVisibilityButton currentVisibility ( buttonText, visibility ) =
+    button
+        [ classList
+            [ ( "active", visibility == currentVisibility )
+            , ( "btn btn-primary", True )
+            ]
+        , onClick (ChangeVisibility visibility)
+        ]
+        [ text buttonText ]
+
+
+todoInput : String -> Html Action
+todoInput inputText =
     Html.form
         [ class "form-group"
         , onSubmit (AddTodo inputText)
@@ -33,31 +58,6 @@ renderInput inputText =
             ]
             []
         ]
-
-
-renderVisibility : Visibility -> Html Action
-renderVisibility visibility =
-    let
-        buttons =
-            [ ( "all", All )
-            , ( "active", Active )
-            , ( "done", Done )
-            ]
-    in
-        div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
-            (map (renderButton visibility) buttons)
-
-
-renderButton : Visibility -> ( String, Visibility ) -> Html Action
-renderButton currentVisibility ( buttonText, visibility ) =
-    button
-        [ classList
-            [ ( "active", visibility == currentVisibility )
-            , ( "btn btn-primary", True )
-            ]
-        , onClick (ChangeVisibility visibility)
-        ]
-        [ text buttonText ]
 
 
 
@@ -79,19 +79,19 @@ filterByVisibility visibility =
             filter <| \t -> t.completed == True
 
 
-renderTodos : List Todo -> Visibility -> Html Action
-renderTodos todos visibility =
+todoList : List Todo -> Visibility -> Html Action
+todoList todos visibility =
     let
         todoList =
             todos
                 |> filterByVisibility visibility
-                |> map renderTodo
+                |> map todoListItem
     in
         ul [ class "list-group" ] todoList
 
 
-renderTodo : Todo -> Html Action
-renderTodo todo =
+todoListItem : Todo -> Html Action
+todoListItem todo =
     li [ class "list-group-item" ]
         [ span
             [ style <| todoStyle todo
