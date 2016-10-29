@@ -21,14 +21,24 @@ app { input, todos, visibility } =
 visibilityFilter : Visibility -> Html Action
 visibilityFilter visibility =
     let
-        visibilityButtons =
+        visibilityOptions =
             [ ( "all", All )
             , ( "active", Active )
             , ( "done", Done )
             ]
+
+        visibilityButtons =
+            visibilityOptions
+                |> map (changeVisibilityButton visibility)
     in
-        div [ class "btn-group pull-right", style [ ( "margin-top", "20px" ) ] ]
-            (map (changeVisibilityButton visibility) visibilityButtons)
+        div
+            [ class "btn-group pull-right"
+            , style
+                [ ( "margin-top", "20px" )
+                , ( "white-space", "nowrap" )
+                ]
+            ]
+            visibilityButtons
 
 
 changeVisibilityButton : Visibility -> ( String, Visibility ) -> Html Action
@@ -37,6 +47,9 @@ changeVisibilityButton currentVisibility ( buttonText, visibility ) =
         [ classList
             [ ( "active", visibility == currentVisibility )
             , ( "btn btn-primary", True )
+            ]
+        , style
+            [ ( "float", "none" )
             ]
         , onClick (ChangeVisibility visibility)
         ]
@@ -47,7 +60,7 @@ todoInput : String -> Html Action
 todoInput inputText =
     Html.form
         [ class "form-group"
-        , onSubmit (AddTodo inputText)
+        , onSubmit <| AddTodo inputText
         ]
         [ input
             [ class "form-control"
@@ -93,9 +106,14 @@ todoList todos visibility =
 todoListItem : Todo -> Html Action
 todoListItem todo =
     li [ class "list-group-item" ]
-        [ span
-            [ style <| todoStyle todo
+        [ input
+            [ type' "checkbox"
             , onClick <| ToggleTodo todo.text
+            , style [ ( "margin-right", "15px" ) ]
+            ]
+            []
+        , span
+            [ style <| todoStyle todo
             ]
             [ text todo.text ]
         , button
