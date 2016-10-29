@@ -1,6 +1,7 @@
 module View exposing (app)
 
 import List exposing (..)
+import Maybe exposing (withDefault)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -9,14 +10,29 @@ import State exposing (..)
 import Json.Decode as Json
 
 
-app : State -> Html Action
-app { input, todos, visibility } =
-    div [ class "container" ]
-        [ visibilityFilter visibility
-        , h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
-        , todoInput input
-        , todoList todos visibility
+app : List State -> Html Action
+app states =
+    let
+        { input, todos, visibility } =
+            withDefault init <| head states
+    in
+        div [ class "container" ]
+            [ visibilityFilter visibility
+            , h1 [ style [ ( "margin-bottom", "20px" ) ] ] [ text "Todos" ]
+            , todoInput input
+            , todoList todos visibility
+            , undoButton <| length states
+            ]
+
+
+undoButton : Int -> Html Action
+undoButton numStates =
+    button
+        [ class "btn btn-default"
+        , onClick Undo
+        , disabled (numStates == 1)
         ]
+        [ text "Undo" ]
 
 
 visibilityFilter : Visibility -> Html Action

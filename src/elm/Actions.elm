@@ -10,3 +10,4 @@ type Action
     | ToggleTodo String
     | UpdateTodo String String
     | ChangeVisibility Visibility
+    | Undo

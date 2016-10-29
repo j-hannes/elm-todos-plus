@@ -2,45 +2,54 @@ module Update exposing (..)
 
 import List exposing (..)
 import Debug exposing (log)
+import Maybe exposing (withDefault)
 import Actions exposing (..)
 import State exposing (..)
 
 
-updateWithLog : Action -> State -> State
-updateWithLog message state =
+updateWithLog : Action -> List State -> List State
+updateWithLog message states =
     let
         m =
             log "Action" message
 
         s =
-            log "State" state
+            log "State" states
     in
         update m s
 
 
-update : Action -> State -> State
-update message state =
-    case message of
-        UpdateInput input ->
-            { state | input = input }
+update : Action -> List State -> List State
+update message states =
+    let
+        state =
+            withDefault init <| head states
+    in
+        case message of
+            UpdateInput input ->
+                { state | input = input } :: states
 
-        AddTodo description ->
-            { state
-                | input = ""
-                , todos = addTodo description state.todos
-            }
+            AddTodo description ->
+                { state
+                    | input = ""
+                    , todos = addTodo description state.todos
+                }
+                    :: states
 
-        DeleteTodo description ->
-            { state | todos = deleteTodo description state.todos }
+            DeleteTodo description ->
+                { state | todos = deleteTodo description state.todos } :: states
 
-        ToggleTodo description ->
-            { state | todos = map (toggleTodo description) state.todos }
+            ToggleTodo description ->
+                { state | todos = map (toggleTodo description) state.todos } :: states
 
-        UpdateTodo description newDescription ->
-            { state | todos = map (updateTodo description newDescription) state.todos }
+            UpdateTodo description newDescription ->
+                { state | todos = map (updateTodo description newDescription) state.todos } :: states
 
-        ChangeVisibility visibility ->
-            { state | visibility = visibility }
+            ChangeVisibility visibility ->
+                { state | visibility = visibility } :: states
+
+            Undo ->
+                withDefault [ init ] <| tail states
 
 
 addTodo : String -> List Todo -> List Todo
