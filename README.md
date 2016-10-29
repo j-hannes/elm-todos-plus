@@ -2,6 +2,8 @@
 
 Todo app written in Elm to teach myself some Elm.
 
+![Screenshot](/screenshot.png?raw=true "Elm Todos Plus App")
+
 ## Description
 
 Project is based on [elm-webpack-starter](https://github.com/moarwick/elm-webpack-starter).
